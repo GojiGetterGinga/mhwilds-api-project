@@ -10,13 +10,13 @@ const API_URL = "https://wilds.mhdb.io/en/";
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 // locations for now, eventually move this once everything is on its own page
 app.get("/", async(req, res) => {
-  let random = Math.floor(Math.random() * 4) + 1;
-  console.log(API_URL + "locations/" + random);
     try {
-      const response = await axios.get(API_URL + "locations/" + random);
-      const result = response.data;
     // for( let i = 0; i< result.camps.length; i++) {
     //   console.log(result.camps[i].name)
     // }
@@ -35,9 +35,7 @@ app.get("/", async(req, res) => {
 
     // res.render("index.ejs", { content: JSON.stringify(result, null, 2)});
     // res.render("index.ejs", { area: result.name, zones: result.zoneCount, zoneCamps: camps});
-    res.render("index.ejs", { data: result});
-
-
+    res.render("index.ejs");
     } catch (error) {
       console.error("Failed to make request:", error.message);
       res.render("index.ejs", {
@@ -47,65 +45,79 @@ app.get("/", async(req, res) => {
 });
 
 app.get("/locations", async(req, res) => {
-  let random = Math.floor(Math.random() * 4) + 1;
-  console.log(API_URL + "locations/" + random);
-    try {
-      const response = await axios.get(API_URL + "locations/" + random);
-      const result = response.data;
-      res.render("locations.ejs", { data: result});
-    } catch (error) {
-      console.error("Failed to make request:", error.message);
-      res.render("index.ejs", {
-        error: error.message,
-      });
-    }
-});
-
-app.post("/get-location", async (req, res) => {
-  console.log(req.body.id);
+  let random = getRandomInt(4) + 1;
+  // console.log(API_URL + "locations/camps?q={\"location.id\":" + random + "}");
+  console.log("id: " + req.body.id);
+  console.log("danger: " + req.body.risk);
   const searchId = req.body.id;
-  if(searchId.length < 1)
-      res.redirect("/locations");
-  
-  else
-  {
-    try {
-      var response;
-      response = await axios.get(API_URL + "locations/" + searchId);
+  const riskLevel = req.body.risk;
+  // default, random location all camps
+  let url = API_URL + "locations/camps?q={\"location.id\":" + random + "}";
 
-      const result = response.data;
-      console.log(result);
-      res.render("locations.ejs", { data: result});
-    } catch (error) {
-      // res.render("index.ejs", { content: JSON.stringify(error.response.data) });
-      console.log(error);
-      res.render("locations.ejs", {
-        error: "Invalid Location ID, Valid IDs: 1-5",
-      });
-      }
+  try {
+    const response = await axios.get(url);
+    const result = response.data;
+    console.log("JSON Result");
+    console.log(result);
+    console.log("result.name: " + result[0].location.name);
+    let locName = result[0].location.name;
+    console.log("result.zoneC: " + result[0].location.zoneCount);
+    let varZoneCount = result[0].location.zoneCount;
+
+    res.render("locations.ejs", { data: result, zoneName: locName, zoneCount: varZoneCount});
+  } catch (error) {
+    console.error("Failed to make request:", error.message);
+    res.render("locations.ejs", {
+      error: error.message,
+    });
   }
 });
 
-// TODO - camps
-// app.post("/get-risk", async (req, res) => {
-//   console.log(req.body);
-//   if(danger.length < 1)
-//       res.redirect("/locations");
+app.post("/get-location", async (req, res) => {
+  let random = getRandomInt(4) + 1;
+
+  console.log("id: " + req.body.id);
+  console.log("danger: " + req.body.risk);
+  const searchId = req.body.id;
+  const riskLevel = req.body.risk;
+  console.log("id length: " + searchId.length + ", risk length: " + riskLevel.length);
+
+  let url = API_URL + "locations/camps?q={\"location.id\":" + random + "}";
+
+  if (searchId.length < 1 && riskLevel.length < 1)
+    res.redirect("/locations");
+
+  else if(searchId.length >= 1 && riskLevel.length < 1)
+    url = API_URL + "locations/camps?q={\"location.id\":" + searchId + "}";
   
-//   else
-//   {
-//     try {
-//       const response = await axios.get(API_URL + "locations/camps?q={\"risk\":\"" + danger + "\"}");
-//       const result = response.data;
-//       res.render("locations.ejs", { data: result});
-//     } catch (error) {
-//       // res.render("index.ejs", { content: JSON.stringify(error.response.data) });
-//       res.render("index.ejs", {
-//         error: "Invalid Location ID, Valid IDs: 1-5",
-//       });
-//       }
-//   }
-// });
+  // random location, chosen risk level
+  else if(searchId.length < 1 && riskLevel.length >= 1)
+    url = API_URL + "locations/camps?q={\"risk\": \"" + riskLevel + "\",\"location.id\":" + random + "}";
+  
+  // selected location and risk
+  else 
+    url = API_URL + "locations/camps?q={\"risk\": \"" + riskLevel + "\",\"location.id\":" + searchId + "}";
+  
+
+  try {
+    console.log(url);
+    const response = await axios.get(url);
+    const result = response.data;
+    // console.log("JSON Result");
+    // console.log(result);
+    console.log("result.name: " + result[0].location.name);
+    let locName = result[0].location.name;
+    console.log("result.zoneC: " + result[0].location.zoneCount);
+    let varZoneCount = result[0].location.zoneCount;
+
+    res.render("locations.ejs", { data: result, zoneName: locName, zoneCount: varZoneCount});
+  } catch (error) {
+    console.error("Failed to make request:", error.message);
+    res.render("locations.ejs", {
+      error: error.message + "; <br/> Iceshard Cliffs has no insecure camps!",
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -1,34 +1,59 @@
-:root {
+/* :root {
   --card-height: 65vh;
   --card-width: calc(var(--card-height) / 1.5);
-}
+} */
+
+
 
 body {
   min-height: 100vh;
-  background: url("../images/monster-hunter-wilds-all-hunter-profile-backgrounds-v0-V5XsT9xSSbcixAvu3KvYMIn67CDict1QxwmAMa-HU2k.webp");
+  background: linear-gradient(
+          rgba(0, 0, 0, 0.268), 
+          rgba(0, 0, 0, 0.7)
+        ), url("../images/monster-hunter-wilds-all-hunter-profile-backgrounds-v0-V5XsT9xSSbcixAvu3KvYMIn67CDict1QxwmAMa-HU2k.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center; /* Center the image */
+  /* background-color: rgba(0, 0, 0, 0.604);
+  background-blend-mode: darken; */
   display: flex;
   /* align-items: center; */
   flex-direction: column;
   padding-top: 1rem;
-  padding-bottom: 2rem;
-  padding-left: 25rem;
+  /* padding-bottom: 2rem; */
+  padding-left: 10rem;
+  padding-right: 10rem;
+
   /* box-sizing: border-box; */
   color:white;
-  font-size: 18px;
+  font-size: 24px;
+  font-family: "Markazi Text", serif;
+  /* line-height: .8; */
 }
 
+::selection {
+  background: #ffc44f90;
+}
+
+
+
+
+/* .markazi-text-<uniquifier> {
+  font-family: "Markazi Text", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+} */
+
 /* .container {
-  max-width: 600px;
+  max-width: 1000;
   margin: 10px auto;
   padding: 20px; 
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 } */
 
-input[type="text"],
+/* input[type="text"],
 input[type="number"] {
   width: 100%;
   padding: 8px;
@@ -36,38 +61,69 @@ input[type="number"] {
   border-radius: 4px;
   box-sizing: border-box;
   margin-bottom: 10px;
-}
+} */
 
-input[type="submit"] {
+/* input[type="submit"] {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-}
+} */
 
 label{
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
 
 }
 
 select, option{
   height: 4vh;
+  font-family: "Markazi Text", serif;
+  font-weight: bold;
+  background-color: #473e36;
+  color:#ffc44f;
+  font-size: 24px;
+  padding-left: 10px;
+
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
+/* option{
+  font-family: serif;
+  font-weight: bold;
+  background-color: #473e36;
+  color:#ffc44f;
+  font-size: 18px;
+} */
+
 .button {
-  background-color: #2ecc71;
+  background-color: #ffc44f;
+  font-family: "Markazi Text", serif;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 5px 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
 }
 
 .button:hover {
-  background-color: #27ae60;
-    color:white;
-
+  background-color: #473e36;
+  color:#ffc44f;
 }
 
- h1 {
-  margin-left: -1rem;
+li h4, li p{
+  line-height: .5;
+}
+
+ h1, h2 {
+  line-height: .75;
 }
 
 
@@ -156,15 +212,52 @@ select, option{
 } */
 
 a {
-  color: #212534;
+  color: white;
   text-decoration: none;
-  font-family: sans-serif;
   font-weight: bold;
   margin-top: 2rem;
+    opacity: 0.75;
+
 }
-/* 
-.user {
+
+a:hover{
+  color:#ffc44f;
+    opacity: 1;
+
+}
+
+footer {
+  position: relative;
+  width: 100%;
+  /* background: #3586ff; */
+  min-height: 100px;
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   color: white;
-  font-size: 24px;
-  font-family: "Titan One", cursive;
-} */
+    margin-top: auto;
+
+}
+
+footer .menu {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+footer .menu li {
+  list-style: none;
+}
+
+footer .menu li a {
+  font-size: 1.2em;
+  /* color: #ccc; */
+  margin: 0 10px;
+  display: inline-block;
+  transition: 0.5s;
+  text-decoration: none;
+}
